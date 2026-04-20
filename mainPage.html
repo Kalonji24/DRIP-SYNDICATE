@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRIP Syndicate</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Urbanist', sans-serif;
+    text-align: center;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.95)),
+        url('https://images.unsplash.com/photo-1600180758890-6b94519a8ba6'),
+        url('https://images.unsplash.com/photo-1528701800489-20be3c3a7c4b');
+    background-size: cover, 45%, 45%;
+    background-position: center, left bottom, right top;
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+    opacity: 0.25;
+    z-index: -1;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+    border-bottom: 2px solid #ff0000;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.92);
+    flex-wrap: wrap;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.6rem;
+    color: #fff;
+    text-shadow: 0 0 10px red;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 55px;
+    width: 55px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 2px solid red;
+    box-shadow: 0 0 10px red;
+    filter: contrast(1.1);
+}
+
+/* BURGER MENU */
+.burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+}
+
+.burger span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: #fff;
+    transition: 0.3s;
+}
+
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+nav {
+    transition: all 0.3s ease;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Urbanist', sans-serif;
+    transition: color 0.2s;
+}
+
+nav a:hover,
+nav a.active {
+    color: red;
+}
+
+/* PAGES */
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+
+/* HERO */
+.hero {
+    padding: 120px 20px;
+}
+
+.hero h1 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 4rem;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px red;
+}
+
+.hero p {
+    color: #ccc;
+    margin: 20px 0;
+    font-size: 1.2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 40px;
+    background: red;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 15px red;
+    font-family: 'Urbanist', sans-serif;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #cc0000;
+    box-shadow: 0 0 25px red;
+}
+
+/* SECTIONS */
+.section {
+    padding: 80px 20px;
+}
+
+.section h2 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2.3rem;
+    color: red;
+    margin-bottom: 30px;
+}
+
+/* FEATURE CARDS */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background: rgba(0,0,0,0.8);
+    padding: 25px 40px;
+    border: 1px solid #222;
+    transition: 0.3s;
+    cursor: pointer;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.card:hover {
+    border-color: red;
+    transform: translateY(-8px);
+    box-shadow: 0 0 15px red;
+    color: red;
+}
+
+/* SHOP PAGE */
+#shop-page {
+    text-align: left;
+}
+
+#shop-page h1 {
+    text-align: center;
+    margin: 40px 0;
+    font-family: 'Permanent Marker', cursive;
+    color: red;
+    font-size: 3rem;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    padding: 20px 40px 60px;
+    text-align: left;
+}
+
+.product {
+    background: #111;
+    padding: 20px;
+    border: 1px solid #222;
+    transition: 0.3s;
+}
+
+.product:hover {
+    border-color: red;
+    transform: scale(1.03);
+    box-shadow: 0 0 20px red;
+}
+
+.product img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+.product-placeholder {
+    width: 100%;
+    height: 220px;
+    background: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    overflow: hidden;
+}
+
+.product h3 {
+    margin: 15px 0 5px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.price {
+    color: red;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.buy-btn {
+    width: 100%;
+    padding: 10px;
+    background: red;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: 0.2s;
+}
+
+.buy-btn:hover {
+    background: #cc0000;
+}
+
+.cart-notice {
+    display: none;
+    text-align: center;
+    color: #0f0;
+    font-size: 0.85rem;
+    margin-top: 6px;
+}
+
+/* FOOTER */
+footer {
+    padding: 30px;
+    border-top: 2px solid red;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* CONTACT PAGE */
+#contact-page {
+    padding: 80px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#contact-page h1 {
+    font-family: 'Permanent Marker', cursive;
+    color: red;
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+}
+
+.contact-form label {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: red;
+}
+
+.contact-form textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* DROPS PAGE */
+#drops-page {
+    padding: 80px 20px;
+}
+
+#drops-page h1 {
+    font-family: 'Permanent Marker', cursive;
+    color: red;
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.drops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 40px;
+    text-align: left;
+}
+
+.drop-card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 24px;
+    transition: 0.3s;
+}
+
+.drop-card:hover {
+    border-color: red;
+    box-shadow: 0 0 15px red;
+}
+
+.drop-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: red;
+    margin-bottom: 8px;
+}
+
+.drop-card h3 {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.drop-card p {
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ── RESPONSIVE ── */
+
+/* Mobile small: up to 420px */
+@media (max-width: 420px) {
+    header { padding: 14px 16px; }
+    .logo { font-size: 1.2rem; }
+    .logo img { height: 40px; width: 40px; }
+    .burger { display: flex; }
+    nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 0 4px;
+        border-top: 1px solid #222;
+        margin-top: 12px;
+    }
+    nav.open { display: flex; }
+    nav a {
+        display: block;
+        width: 100%;
+        padding: 12px 4px;
+        margin: 0;
+        border-bottom: 1px solid #1a1a1a;
+        text-align: left;
+    }
+    .hero { padding: 60px 16px 50px; }
+    .hero h1 { font-size: 1.9rem; letter-spacing: 2px; }
+    .hero p { font-size: 0.95rem; }
+    .btn { padding: 12px 24px; font-size: 0.85rem; }
+    .section { padding: 40px 16px; }
+    .section h2 { font-size: 1.6rem; }
+    .card { padding: 16px 24px; font-size: 0.95rem; width: 100%; max-width: 300px; }
+    #shop-page h1, #drops-page h1, #contact-page h1 { font-size: 2rem; margin: 24px 0; }
+    .products { grid-template-columns: 1fr; gap: 20px; padding: 16px; }
+    .product img, .product-placeholder { height: 200px; }
+    .drops-grid { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
+    #contact-page { padding: 40px 16px; }
+    footer { font-size: 0.8rem; padding: 20px 16px; }
+}
+
+/* Mobile: 421px – 768px */
+@media (min-width: 421px) and (max-width: 768px) {
+    header { padding: 16px 20px; }
+    .burger { display: flex; }
+    nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 0 6px;
+        border-top: 1px solid #222;
+        margin-top: 12px;
+    }
+    nav.open { display: flex; }
+    nav a {
+        display: block;
+        width: 100%;
+        padding: 12px 4px;
+        margin: 0;
+        font-size: 1rem;
+        border-bottom: 1px solid #1a1a1a;
+        text-align: left;
+    }
+    .hero { padding: 70px 20px 60px; }
+    .hero h1 { font-size: 2.4rem; letter-spacing: 2px; }
+    .hero p { font-size: 1rem; }
+    .btn { padding: 12px 28px; font-size: 0.9rem; }
+    .section { padding: 50px 16px; }
+    .section h2 { font-size: 1.8rem; }
+    .card { padding: 18px 28px; font-size: 1rem; width: 100%; max-width: 300px; }
+    #shop-page h1, #drops-page h1, #contact-page h1 { font-size: 2.2rem; margin: 30px 0; }
+    .products { grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+    .product img, .product-placeholder { height: 160px; }
+    .drops-grid { grid-template-columns: 1fr; padding: 20px 16px; gap: 16px; }
+    #contact-page { padding: 50px 16px; }
+    footer { font-size: 0.8rem; padding: 20px 16px; }
+}
+
+/* Tablet: 769px – 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    header { padding: 24px 30px; }
+    .hero h1 { font-size: 3rem; }
+    .products { grid-template-columns: repeat(2, 1fr); padding: 20px 30px 50px; }
+    .drops-grid { grid-template-columns: repeat(2, 1fr); padding: 30px; }
+}
+
+/* Large screens: 1400px+ */
+@media (min-width: 1400px) {
+    .hero h1 { font-size: 5rem; }
+    .products { grid-template-columns: repeat(4, 1fr); max-width: 1400px; margin: 0 auto; }
+    .drops-grid { max-width: 1200px; margin: 0 auto; }
+    #contact-page { max-width: 700px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <a class="logo" onclick="showPage('home')">
+        <img src="/images/Business logo.jpeg" alt="DRIP Syndicate Logo">
+        DRIP SYNDICATE
+    </a>
+
+    <button class="burger" id="burger" onclick="toggleMenu()" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav id="main-nav">
+        <a onclick="showPage('home'); closeMenu()" id="nav-home" class="active">Home</a>
+        <a onclick="showPage('shop'); closeMenu()" id="nav-shop">Shop</a>
+        <a onclick="showPage('drops'); closeMenu()" id="nav-drops">Drops</a>
+        <a onclick="showPage('contact'); closeMenu()" id="nav-contact">Contact</a>
+    </nav>
+</header>
+
+<!-- HOME PAGE -->
+<div id="home-page" class="page active">
+    <section class="hero">
+        <h1>DRIP SYNDICATE</h1>
+        <p>Street. Power. Identity.</p>
+        <button class="btn" onclick="showPage('shop')">SHOP THE DROP</button>
+    </section>
+
+    <section class="section">
+        <h2>FEATURED DROPS</h2>
+        <div class="cards">
+            <div class="card" onclick="showPage('shop')">Hoodies</div>
+            <div class="card" onclick="showPage('shop')">Tees</div>
+            <div class="card" onclick="showPage('shop')">Sneakers</div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>ABOUT</h2>
+        <p style="max-width:600px;margin:auto;color:#aaa;line-height:1.7;">
+            DRIP Syndicate represents bold identity and street dominance. Built for those who don't follow trends—they set them.
+        </p>
+    </section>
+</div>
+
+<!-- SHOP PAGE -->
+<div id="shop-page" class="page">
+    <h1>SHOP THE DROP</h1>
+    <div class="products">
+
+        <div class="product">
+            <div class="product-placeholder">
+                <img src="/images/STREET HOODIE.png.webp" alt="Street Hoodie"
+                     style="width:100%;height:100%;object-fit:cover;"
+                     onerror="this.parentElement.innerHTML='NO IMAGE'">
+            </div>
+            <h3>Street Hoodie</h3>
+            <div class="price">$79</div>
+            <button class="buy-btn" onclick="addToCart(this)">Add to Cart</button>
+            <div class="cart-notice">✓ Added to cart</div>
+        </div>
+
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?w=400&q=80" alt="Urban Sneakers">
+            <h3>Urban Sneakers</h3>
+            <div class="price">$120</div>
+            <button class="buy-btn" onclick="addToCart(this)">Add to Cart</button>
+            <div class="cart-notice">✓ Added to cart</div>
+        </div>
+
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80" alt="Graphic Tee">
+            <h3>Graphic Tee</h3>
+            <div class="price">$45</div>
+            <button class="buy-btn" onclick="addToCart(this)">Add to Cart</button>
+            <div class="cart-notice">✓ Added to cart</div>
+        </div>
+
+        <div class="product">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Red Drip Sneakers">
+            <h3>Red Drip Sneakers</h3>
+            <div class="price">$140</div>
+            <button class="buy-btn" onclick="addToCart(this)">Add to Cart</button>
+            <div class="cart-notice">✓ Added to cart</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- DROPS PAGE -->
+<div id="drops-page" class="page">
+    <h1>UPCOMING DROPS</h1>
+    <p style="color:#888; margin-top:8px; letter-spacing:1px;">Exclusive. Limited. Don't sleep.</p>
+    <div class="drops-grid">
+        <div class="drop-card">
+            <div class="drop-label">DROPPING SOON</div>
+            <h3>BLACKOUT VOL. 3</h3>
+            <p>All-black capsule collection. Hoodies, cargos, and statement tees. Limited run of 200 units.</p>
+        </div>
+        <div class="drop-card">
+            <div class="drop-label">RESTOCKING</div>
+            <h3>RED ERA SNEAKERS</h3>
+            <p>The iconic Red Drip colorway is coming back. Sizes 6–14. First come, first served.</p>
+        </div>
+        <div class="drop-card">
+            <div class="drop-label">COMING SOON</div>
+            <h3>SUMMER 2026</h3>
+            <p>Lightweight fits for the heat. New silhouettes, raw materials, unreleased graphics. Stay locked in.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACT PAGE -->
+<div id="contact-page" class="page">
+    <h1>CONTACT</h1>
+    <p style="color:#888; margin-bottom:30px;">Got questions? Hit us up.</p>
+    <div class="contact-form">
+        <div>
+            <label>NAME</label>
+            <input type="text" placeholder="Your name">
+        </div>
+        <div>
+            <label>EMAIL</label>
+            <input type="email" placeholder="your@email.com">
+        </div>
+        <div>
+            <label>MESSAGE</label>
+            <textarea placeholder="What's good?"></textarea>
+        </div>
+        <button class="btn" style="align-self:flex-start;" onclick="submitContact(this)">SEND IT</button>
+        <p id="contact-success" style="display:none;color:#0f0;letter-spacing:1px;">Message sent. We'll be in touch.</p>
+    </div>
+</div>
+
+<footer>
+    © 2026 DRIP Syndicate. All Rights Reserved.
+</footer>
+
+<script>
+function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById(page + '-page').classList.add('active');
+    document.getElementById('nav-' + page).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function addToCart(btn) {
+    btn.textContent = 'Added ✓';
+    btn.style.background = '#333';
+    btn.disabled = true;
+    const notice = btn.nextElementSibling;
+    notice.style.display = 'block';
+}
+
+function submitContact(btn) {
+    btn.textContent = 'SENT ✓';
+    btn.style.background = '#333';
+    btn.disabled = true;
+    document.getElementById('contact-success').style.display = 'block';
+}
+
+function toggleMenu() {
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('main-nav');
+    burger.classList.toggle('open');
+    nav.classList.toggle('open');
+}
+
+function closeMenu() {
+    document.getElementById('burger').classList.remove('open');
+    document.getElementById('main-nav').classList.remove('open');
+}
+</script>
+
+</body>
+</html>
