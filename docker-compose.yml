@@ -1,0 +1,70 @@
+# DRIP Syndicate — full local stack: Postgres + ASP.NET Core API + Next.js storefront.
+# Usage:
+#   docker compose up -d --build      # build & start everything in the background
+#   docker compose logs -f backend    # tail backend logs
+#   docker compose down               # stop (add -v to also wipe the database volume)
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: drip-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dripsyndicate
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dripsyndicate"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: drip-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      # EF Core migrations run automatically at startup via the seeder.
+      ConnectionStrings__Default: "Host=db;Port=5432;Database=dripsyndicate;Username=postgres;Password=postgres"
+      Jwt__Issuer: dripsyndicate
+      Jwt__Audience: dripsyndicate-client
+      Jwt__Secret: "local_dev_secret_change_me_at_least_32_chars_0123456789"
+      Jwt__AccessTokenMinutes: "15"
+      Jwt__RefreshTokenDays: "30"
+      Supabase__Url: "https://YOUR-PROJECT.supabase.co"
+      Supabase__ServiceKey: "YOUR_SUPABASE_SERVICE_ROLE_KEY"
+      Supabase__Bucket: "media"
+      Cors__Origins__0: "http://localhost:3000"
+      Seed__Enabled: "true"
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Baked into the client bundle at build time.
+        NEXT_PUBLIC_API_URL: "http://localhost:8080/api/v1"
+    container_name: drip-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:8080/api/v1"
+    ports:
+      - "3000:3000"
+
+volumes:
+  dbdata:

@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/appsettings.*.local.json
+.git/
+.github/
+README.md
+tests/**/TestResults/

@@ -1,0 +1,33 @@
+# ── .NET ──────────────────────────────────────────────
+bin/
+obj/
+*.user
+[Dd]ebug/
+[Rr]elease/
+.vs/
+
+# ── Node / Next.js ────────────────────────────────────
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Environment & secrets ─────────────────────────────
+.env
+.env.*
+!.env.example
+!frontend/.env.local.example
+
+# ── OS / editor ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# ── Build / coverage artefacts ────────────────────────
+*.log
+coverage/
+TestResults/

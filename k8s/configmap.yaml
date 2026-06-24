@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drip-config
+  namespace: drip-syndicate
+data:
+  # Non-secret configuration shared by the backend.
+  ASPNETCORE_ENVIRONMENT: "Production"
+  ASPNETCORE_URLS: "http://0.0.0.0:8080"
+  Seed__Enabled: "true"
+  Cors__Origins__0: "https://shop.dripsyndicate.com"
+  Jwt__Issuer: "drip-syndicate"
+  Jwt__Audience: "drip-syndicate-client"
+  Jwt__AccessTokenMinutes: "15"
+  Jwt__RefreshTokenDays: "30"
+  Supabase__Bucket: "media"
